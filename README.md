@@ -10,4 +10,4 @@ pypy3 -m pip install <package1> <package2> ... <packageN>
 ```
 Replace `<package1>`, `<package2>`, etc., with the names of the necessary packages.
 
-**Note:** If you decide to use Python 3 instead of pypy3, it's essential to keep the number of iterations below 10,000 in `main.py`. This limitation is to ensure optimal performance and prevent potential issues with resource consumption.
+**Note:** If you decide to use python3 instead of pypy3, it's essential to keep the number of iterations below 10,000 in `main.py`. python3 run time will very high.
