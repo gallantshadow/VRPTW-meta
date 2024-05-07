@@ -24,7 +24,6 @@ class SimulatedAnnealing:
         Utils.plot_customers_and_routes(self.customer_list, route_list,filename+"{i}.png".format(i=i))
         best_route_list = [copy(i) for i in route_list]
         curr_route_list = [copy(i) for i in route_list]
-        print(best_route_list)
         neighbour_route_list = [copy(i) for i in route_list]
         cost_of_best_route_list = Utils.calculate_total_distance_of_all_route(best_route_list, self.cToc_distance)
         cost_of_curr_route_list = Utils.calculate_total_distance_of_all_route(curr_route_list, self.cToc_distance)
@@ -53,7 +52,7 @@ class SimulatedAnnealing:
                         best_route_list = [copy(i) for i in curr_route_list]
                         cost_of_best_route_list = cost_of_curr_route_list
                         i+=1
-                        Utils.plot_customers_and_routes(self.customer_list, best_route_list,filename+"{i}.png".format(i=i))
+                        # Utils.plot_customers_and_routes(self.customer_list, best_route_list,filename+"{i}.png".format(i=i))
 
                 iteration += 1
                 counter +=1
