@@ -74,5 +74,5 @@ def main(filepath="./solomon-100/In/",filename="c201.txt"):
     # print(simulated_annealing.run(100, 1, 0.98, 6000, filename)) #use 6000 iteration if you dont have pypy3 installed
 
 if __name__ == "__main__":
-    trails(main) #trails take 7 hours to run over 56 files
-    #main()
+    #trails(main) #trails take 7 hours to run over 56 files
+    main()
