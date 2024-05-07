@@ -1,3 +1,7 @@
+'''
+VRPTW cs633 project
+author: Bhavdeep Khileri(bk2281), Jay Nair(an1147), Sanish Suwal (ss4657)
+'''
 class Depo:
     def __init__(self, id=0, x_coordinate=0, y_coordinate=0, demand=0, timeWindow_start=0, timeWindow_end=0, serviceTime=0):
         self.id = id

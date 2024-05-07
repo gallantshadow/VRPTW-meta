@@ -1,27 +1,37 @@
+'''
+VRPTW cs633 project
+author: Bhavdeep Khileri(bk2281), Jay Nair(an1147), Sanish Suwal (ss4657)
+'''
 import os
 from customer import Customer
 from depo import Depo
 from sa import SimulatedAnnealing
 from utils import Utils
 from vehicle import Vehicle
+from trials import main as trails
 
-def main():
+def main(filepath="./solomon-100/In/",filename="c201.txt"):
     depo = Depo()
     vehicle = Vehicle()
     customer_list = []
 
     vehicle.id = 0
-    vehicle.capacity = 700
+    vehicle.capacity = None
     is_depo = True
     customer_id = 0
     idx =0
     # Getting customer data from data.txt which contains data from Solomon's dataset
     # URL for Solomon's dataset: http://web.cba.neu.edu/~msolomon/r101.htm
-    with open("./solomon-100/In/c201.txt", "r") as file:
+    with open(filepath+filename, "r") as file:
         for line in file:
+            if idx == 4:
+                data = line.strip().split()
+                vehicle.capacity = int(data[1])
+                print(vehicle.capacity)
             if idx <= 8:
                 idx+=1
                 continue
+
             data = line.strip().split()
             if is_depo:
                 depo.id = customer_id
@@ -58,10 +68,11 @@ def main():
                 customer_list[j].x_coordinate,
                 customer_list[j].y_coordinate,
             )
-    print("#####################", customer_list)
     # Calling Simulated Annealing
     simulated_annealing = SimulatedAnnealing(depo, vehicle, customer_list, c_to_c_distance)
-    simulated_annealing.run(100, 1, 0.98, 100000)
+    print(simulated_annealing.run(100, 1, 0.98, 50000, filename)) #use this pypy3 it will take 1 minute for 50000 iteration
+    # print(simulated_annealing.run(100, 1, 0.98, 6000, filename)) #use 6000 iteration if you dont have pypy3 installed
 
 if __name__ == "__main__":
-    main()
+    trails(main) #trails take 7 hours to run over 56 files
+    #main()

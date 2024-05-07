@@ -1,3 +1,7 @@
+'''
+VRPTW cs633 project
+author: Bhavdeep Khileri(bk2281), Jay Nair(an1147), Sanish Suwal (ss4657)
+'''
 import math
 import random
 from typing import List
@@ -13,21 +17,21 @@ class SimulatedAnnealing:
         self.customer_list = customer_list
         self.cToc_distance = cToc_distance
 
-    def run(self, initial_temp, final_temp, cooling_factor, no_of_iteration):
-        print("1")
+    def run(self, initial_temp, final_temp, cooling_factor, no_of_iteration, filename):
+        i=0
         route_list = Utils.generate_random_route_list(self.depo, self.vehicle, self.customer_list, self.cToc_distance)
-        Utils.print_route_list(route_list, self.cToc_distance)
-
+        #Utils.print_route_list(route_list, self.cToc_distance)
+        Utils.plot_customers_and_routes(self.customer_list, route_list,filename+"{i}.png".format(i=i))
         best_route_list = [copy(i) for i in route_list]
         curr_route_list = [copy(i) for i in route_list]
+        print(best_route_list)
         neighbour_route_list = [copy(i) for i in route_list]
         cost_of_best_route_list = Utils.calculate_total_distance_of_all_route(best_route_list, self.cToc_distance)
-        print("1")
         cost_of_curr_route_list = Utils.calculate_total_distance_of_all_route(curr_route_list, self.cToc_distance)
         curr_temp = initial_temp
-        print("2")
+        counter =0
         while curr_temp > final_temp:
-            print(curr_temp)
+            print(curr_temp, counter)
             iteration = 0
             while iteration < no_of_iteration:
                 neighbour_route_list = self.get_neighbour(curr_route_list)
@@ -48,11 +52,16 @@ class SimulatedAnnealing:
                     if cost_of_curr_route_list < cost_of_best_route_list:
                         best_route_list = [copy(i) for i in curr_route_list]
                         cost_of_best_route_list = cost_of_curr_route_list
+                        i+=1
+                        Utils.plot_customers_and_routes(self.customer_list, best_route_list,filename+"{i}.png".format(i=i))
 
                 iteration += 1
+                counter +=1
             curr_temp *= cooling_factor
-
+        i+=1
+        Utils.plot_customers_and_routes(self.customer_list, best_route_list,filename+"{i}.png".format(i=i))
         Utils.print_route_list(best_route_list, self.cToc_distance)
+        return Utils.return_route_list(best_route_list, self.cToc_distance)
 
     def get_neighbour(self, route_list):
         rand = random.randint(1, 3)
@@ -85,39 +94,6 @@ class SimulatedAnnealing:
             random_route.insert(random_customer_index, customer)
 
         return neighbour_route_list
-
-    # def mutate_swap(self, route_list):
-    #     neighbour_route_list = [copy(i) for i in route_list]
-    #     random_route_index1 = random.randint(0, len(neighbour_route_list) - 1)
-    #     random_route_index2 = random.randint(0, len(neighbour_route_list) - 1)
-
-    #     if random_route_index1 != random_route_index2:
-    #         random_route1 = neighbour_route_list[random_route_index1]
-    #         random_route2 = neighbour_route_list[random_route_index2]
-
-    #         if len(random_route1) > 2 and len(random_route2) > 2:
-    #             random_customer_index1 = random.randint(1, len(random_route1) - 2)
-    #             random_customer_index2 = random.randint(1, len(random_route2) - 2)
-
-    #             customer1 = random_route1.pop(random_customer_index1)
-    #             customer2 = random_route2.pop(random_customer_index2)
-
-    #             random_route1.insert(random_customer_index1, customer2)
-    #             random_route2.insert(random_customer_index2, customer1)
-
-    #     return neighbour_route_list
-
-    # def mutate_inversion(self, route_list):
-    #     neighbour_route_list = [copy(i) for i in route_list]
-    #     random_route_index = random.randint(0, len(neighbour_route_list) - 1)
-    #     random_route = neighbour_route_list[random_route_index]
-
-    #     if len(random_route) > 3:
-    #         start_index = random.randint(1, len(random_route) - 2)
-    #         end_index = random.randint(start_index + 1, len(random_route) - 1)
-    #         random_route[start_index:end_index] = reversed(random_route[start_index:end_index])
-
-    #     return neighbour_route_list
 
     def mutate_swap(self, route_list):
         neighbour_route_list = [route[:] for route in route_list]

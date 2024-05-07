@@ -1,7 +1,12 @@
+'''
+VRPTW cs633 project
+author: Bhavdeep Khileri(bk2281), Jay Nair(an1147), Sanish Suwal (ss4657)
+'''
 import math
 import copy
 from typing import List
-
+import matplotlib.pyplot as plt
+import os
 
 class Utils:
     @staticmethod
@@ -117,6 +122,16 @@ class Utils:
         print(f"Total Distance Of All Routes: {total_distance}")
 
     @staticmethod
+    def return_route_list(route_list, cToc_distance):
+        used_vehicle_count = sum(1 for route in route_list if len(route) >= 3)
+
+        total_distance = 0
+        for i, route in enumerate(route_list):
+            total_distance += Utils.calculate_total_distance(route, cToc_distance)
+
+        return used_vehicle_count, total_distance
+
+    @staticmethod
     def print_total_distance(route_list, cToc_distance):
         total_distance = Utils.calculate_total_distance_of_all_route(route_list, cToc_distance)
         print(f"Total Distance Of All Routes: {total_distance}")
@@ -126,3 +141,42 @@ class Utils:
         for route in list_from:
             new_customer_list = [copy.deepcopy(customer) for customer in route]
             list_to.append(new_customer_list)
+    
+    @staticmethod
+    def plot_customers_and_routes(customers, routes, filename):
+        routes = [route for route in routes if len(route) >= 3]
+        colors = [
+    'red', 'blue', 'green', 'purple', 'orange', 'yellow', 'cyan', 'magenta', 'lime', 'pink',
+    'teal', 'lavender', 'brown', 'beige', 'maroon', 'turquoise', 'olive', 'hotpink', 'navy', 'grey',
+    'black', 'white', 'crimson', 'turquoise', 'indigo', 'silver', 'gold', 'violet', 'tan', 'rosybrown']
+        # Extract customer coordinates
+        x_coords = [customer.x_coordinate for customer in customers]
+        y_coords = [customer.y_coordinate for customer in customers]
+
+        # Plot customers
+        plt.scatter(x_coords, y_coords, color='blue')
+
+        # Plot depot
+        depot_x = routes[0][0].x_coordinate  # First route, first customer
+        depot_y = routes[0][0].y_coordinate
+        # Plot routes
+        for i, route in enumerate(routes):
+            route_x = [depot_x] + [customer.x_coordinate for customer in route] + [depot_x]
+            route_y = [depot_y] + [customer.y_coordinate for customer in route] + [depot_y]
+            plt.plot(route_x, route_y, marker='o', color=colors[i])
+
+        plt.scatter(depot_x, depot_y, color='turquoise', label='Depot',zorder=100)
+        plt.xlabel('X Coordinate')
+        plt.ylabel('Y Coordinate')
+        plt.title('Customer Locations and Routes')
+        plt.legend()
+        plt.grid(True)
+        # Extract directory name from filename
+        directory_name = filename.split('.')[0]
+        assets_directory = os.path.join('assets', directory_name)
+        # Create directory if it doesn't exist
+        os.makedirs(assets_directory, exist_ok=True)
+        # Save plot image
+        plt.savefig(os.path.join(assets_directory+"/"+filename))
+        plt.cla()
+        plt.close()

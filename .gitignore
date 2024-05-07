@@ -1,0 +1,6 @@
+/assets/
+*.zip
+testing.py
+*.gif
+*png
+/__pycache__
